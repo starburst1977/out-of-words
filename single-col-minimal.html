@@ -1,0 +1,312 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link href="style.css" rel="stylesheet" type="text/css" />
+		<link href="rainbow-theme.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body class="minimal">
+
+		<div class="multicol-helper">
+			
+			<!-- Example Header -->
+			
+			<h1 class="article-header">
+			  CSS Architecture
+			</h1>
+			
+			<!-- / Example Header -->
+			
+			
+			<!-- Example Content -->
+			
+			<div id="provider-content">
+				<div><div class="entry-content">
+					<p>To many Web developers, being good at CSS means you can take a visual mock-up and replicate it perfectly in code. You don’t use tables, and you pride yourself on using as few images as possible. If you’re really good, you use the latest and greatest techniques like media queries, transitions and transforms. While all this is certainly true of good CSS developers, there’s an entirely separate side to CSS that rarely gets mentioned when assessing one’s skill.</p>
+			<p>Interestingly, we don’t usually make this oversight with other languages. A Rails developer isn’t considered good just because his code works to spec. This is considered baseline. Of course it must work to spec; its merit is based on other things: Is the code readable? Is it easy to change or extend? Is it decoupled from other parts of the application? Will it scale?</p>
+			<p>These questions are natural when assessing other parts of the code base, and CSS shouldn’t be any different. Today’s web applications are larger than ever, and a poorly thought-out CSS architecture can cripple development. It’s time to evaluate CSS the same way we evaluate every other part of the application. It cannot be an afterthought or written off as merely the “designer’s” problem.</p>
+			<h2>The Goals of Good CSS Architecture</h2>
+			<p>In the CSS community, a general concensus of best practices is very difficult to come by. Judging purely by the <a href="http://news.ycombinator.com/item?id=2658948">comments on Hacker News</a> and the <a href="http://2002-2012.mattwilcox.net/archive/entry/id/1054/">reaction of developers</a> to the release of <a href="http://csslint.net/">CSS Lint</a>, it’s clear that many people disagree over even the basic things CSS authors should and shouldn’t do.</p>
+			<p>So instead of laying out an argument for my own set of best practices, I think we should start by defining our goals. If we can agree upon the goals, hopefully we can start to spot bad CSS not because it breaks our preconceived notions of what’s good but because it actually hinders the development process.</p>
+			<p>I believe the goals of good CSS architecture shouldn’t be that different from the goals of all good software development. I want my CSS to be predictable, reusable, maintainable, and scalable.</p>
+			<h3>Predictable</h3>
+			<p>Predictable CSS means your rules behave as you’d expect. When you add or update a rule, it shouldn’t affect parts of your site that you didn’t intend. On small sites that rarely change, this isn’t as important, but on large sites with tens or hundreds or pages, predictable CSS is a must.</p>
+			<h3>Reusable</h3>
+			<p>CSS rules should be abstract and decoupled enough that you can build new components quickly from existing parts without having to recode patterns and problems you’ve already solved.</p>
+			<h3>Maintainable</h3>
+			<p>When new components and features need to be added, updated or rearranged on your site, doing so shouldn’t require refactoring existing CSS. Adding component X to the page shouldn’t break component Y by its mere presence.</p>
+			<h3>Scalable</h3>
+			<p>As your site grows in size and complexity it usually requires more developers to maintain. Scalable CSS means it can be easily managed by a single person or a large engineering team. It also means your site’s CSS architecture is easily approachable without requiring an enormous learning curve. Just because you’re the only developer touching the CSS today doesn’t mean that will always be the case.</p>
+			<h2>Common Bad Practices</h2>
+			<p>Before we look at ways to achieve the goals of good CSS architecture, I think it can be helpful to look at common practices that get in the way of our goals. It’s often only through repeated mistakes that we can begin to embrace an alternate path.</p>
+			<p>The following examples are all generalizations of code I’ve actually written, and, while technically valid, each has lead to disaster and headache. Dispite my best intentions and the promise that this time would be different, these patterns consistently got me into trouble.</p>
+			<h3>Modifying Components Based On Who Their Parents Are</h3>
+			<p>In almost every site on the web there will be a particular visual element that looks exactly the same with each occurrence, except one. And when faced with this one-off situation almost every new CSS developer (and even experienced ones) handles it the same way. You figure out some unique parent for this one particular occurrence (or you create one), and you write a new rule to handle it.</p>
+<pre>.widget {
+	background: yellow;
+	border: 1px solid black;
+	color: black;
+	width: 50%;
+}
+#sidebar .widget {
+	width: 200px;
+}
+body.homepage .widget {
+	background: white;
+}</pre>
+			<p>At first this might seem like fairly harmless code, but let’s examine it based on the goals established above.</p>
+			<p>First, the widget in the examle is not predictable. A developer who’s made several of these widgets will expect it to look a certain way, yet when she uses it in the sidebar or on the homepage, it will look different, despite the markup being exactly the same.</p>
+			<p>It’s also not very reusable or scalable. What happens when the way it looks on the homepage is requested on some other page? New rules will have to be added.</p>
+			<p>Lastly, it’s not easily maintainable because if the widget were to get redesigned, it would have to get updated in several places in the CSS, and unlike the above example, the rules that commit this particular anti-pattern rarely appear right next to each other.</p>
+			<p>Imagine if this type of coding were done in any other language. You’re essentially making a class definition, and then in another part of the code you’re reaching into that class definition and changing it for a particular use case. This directly violates the open/closed principle of software development:</p>
+			<blockquote><p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p></blockquote>
+			<p>Later in this article we’ll look at how to modify components without relying on parent selectors.</p>
+			<h3>Overly Complicated Selectors</h3>
+			<p>Occasionally an article will make its way around the Internet showcasing the power of CSS selectors and proclaiming that you can style an entire site without using any classes or IDs.</p>
+			<p>While technically true, the more I develop with CSS, the more I stay away from complex selectors. The more complicated a selector the more coupled it is to the HTML. Relying on HTML tags and combinators keeps your HTML squeaky clean, but it makes your CSS gross and dirty.</p>
+<pre><code>#main-nav ul li ul li div { }
+#content article h1:first-child { }
+#sidebar &gt; div &gt; h3 + p { }
+</code></pre>
+			<p>All of the above examples make logical sense. The first is probably styling a dropdown menu, the second says that the article’s main heading should look different than all other h1 elements, and the last example is likely adding some extra spacing for the first paragraph in the sidebar sections.</p>
+			<p>If this HTML were never going to change, an argument could be made for its merits, but how realistic is it to assume the HTML will never change? Overly complicated selectors can be impressive and they can rid the HTML of all presentational hooks, but they rarely help us achieve our goals for good CSS architecture.</p>
+			<p>These examples above are not reusable at all. Since the selector is pointing to a very particular place in the markup, how could another component with a different HTML structure reuse those styles? Taking the first selector (the dropdown) as an example, what if a similar looking dropdown were needed on a different page and it wasn’t inside of the <code>#main-nav</code> element? You’d have to recreate the entire style.</p>
+			<p>These selectors are also very unpredictable if the HTML needs to change. Imagine that a devloper wanted to change the <code>div</code> in the third example to the HTML5 <code>section</code> tag, the whole rule would break.</p>
+			<p>Finally, since these selectors only work when the HTML remains constant, they’re by definition not maintainable or scalable.</p>
+			<p>In large applictaions you have to make trade-offs and compromises. The fragility of complex selectors are rarely worth the price in the name of keeping your HTML “clean”.</p>
+			<h3>Overly Generic Class Names</h3>
+			<p>When creating reusable design components, it’s very common to scope (as it were) the component’s sub-elements inside the component’s class name. For example:</p>
+<pre><code>&lt;div class="widget"&gt;
+	&lt;h3 class="title"&gt;...&lt;/h3&gt;
+	&lt;div class="contents"&gt;
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+		In condimentum justo et est dapibus sit amet euismod ligula ornare.
+		Vivamus elementum accumsan dignissim.
+	&lt;button class="action"&gt;Click Me!&lt;/button&gt;
+	 &lt;/div&gt;
+&lt;/div&gt;
+</code>
+			<code>.widget {}
+			.widget .title {}
+			.widget .contents {}
+			.widget .action {}
+			</code></pre>
+			<p>The idea is that the <code>.title</code>, <code>.contents</code>, and <code>.action</code> sub-element classes can be safely styled without having to worry about those styles spilling over to any other elements styled with the same classes. This is true, but it doesn’t prevent the styling of classes with those same names from spilling into this component.</p>
+			<p>On a large project it’s very likely that a class name like <code>.title</code> would get used in another context or even by itself. If that happened, the widget’s title would suddenly look very different than intended.</p>
+			<p>Overly generic class names lead to very unpredictable CSS.</p>
+			<h3>Making a Rule Do Too Much</h3>
+			<p>Sometimes you make a visual component that needs to be 20 pixels from the top left corner of a section in your site:</p>
+			<pre><code>.widget {
+			  position: absolute;
+			  top: 20px;
+			  left: 20px;
+			  background-color: red;
+			  font-size: 1.5em;
+			  text-transform: uppercase;
+			}
+			</code></pre>
+			<p>Then down the road you need to use this exact same components in a different location. The above CSS won’t work because it’s not reusable in different contexts.</p>
+			<p>The problem is that you’re making this one selector do too much. You’re defining the look and feel as well as the layout and position within the same rule. The look and feel is reusable but the layout and position is not. And since they’re used together, the whole rule is compromised.</p>
+			<p>While this may seem harmless at first, it often leads to copying and pasting from less CSS-savvy developers. If a new team member wants something to look like a particular component, say an <code>.infobox</code>, they’ll probably start by trying that class. But if that doesn’t work because it positions that new infobox in an undesired way, what are they likely to do? In my experience, most new developers will not break the rule up into its reusable parts. Instead they’ll simply copy and paste the lines of code needed for this particular instance into a new selector, unnecessarily duplicating code.</p>
+			<h2>The Cause</h2>
+			<p>All of the above bad practices share one similarity, they place far too much of the styling burden on the CSS.</p>
+			<p>That may seem like strange statement. After all, it is a stylesheet; shouldn’t it bear most (if not all) of the styling burden? Isn’t that what we want?</p>
+			<p>The simple answer to this question is “yes”, but, as usual, things aren’t always so simple. Separating content from presentation is a good thing, but just because your CSS is separate from your HTML doesn’t mean your content is separate from your presentation. Put another way, striping all presentational code from your HTML doesn’t fulfill the goal if your CSS requires an intimate knowledge of your HTML structure in order to work.</p>
+			<p>Furthermore, HTML is rarely just content; it’s almost always structure too. And often that structure consists of container elements with no purpose other than to allow the CSS to isolate a certain group of elements. Even without presentational classes, this is still clearly presentation mixed into the HTML. But is it necessarily mixing presentation with content?</p>
+			<p>I believe, given the current state of HTML and CSS, it’s necessary and often wise to have the HTML and CSS work together as a presentational layer. The content layer can still be abstracted away via templates and partials.</p>
+			<h2>The Solution</h2>
+			<p>If your HTML and your CSS are going to work together to form the presentation layer of a web application, they need to do so in a way that promotes all of the principles of good CSS architecture.</p>
+			<p>The best approach that I’ve found is for the CSS include as little HTML structure as possible. The CSS should define how a set of visual elements look and (in order to minimize coupling with the HTML) those elements should look as they’re defined regardless of where they appear in the HTML. If a certain component needs to look different in a different scenario, it should be called something different and it’s the HTML’s responsibility to call it that.</p>
+			<p>As an example, the CSS might define a button component via the <code>.button</code> class. If the HTML wants a particular element to look like a button, it should use that class. If there’s a situation were the button needs to look different (perhaps larger and full-width), then the CSS needs to define that look as well with a new class, and the HTML can include that new class to employ the new look.</p>
+			<p>The CSS defines what your components look like, and the HTML assigns those looks to the elements on the page. The less the CSS needs to know about the HTML structure the better.</p>
+			<p>A huge benefit of declaring exactly what you want in the HTML is it allows other developers to look at the markup and know exactly what the element is supposed to look like. The intent is obvious. Without this practice it’s impossible to tell if the look of an element is intentional or accidental, and this leads to confusion on the team.</p>
+			<p>A common objection to putting a lot of classes in the markup is the extra effort required to do so. A single CSS rule could target a thousand instances of a particular component. Is it really worth writing that classes a thousand times just to have it explicitly declared in the markup?</p>
+			<p>While this concern is clearly valid, it can be misleading. The implication is that either you use a parent selector in the CSS or you write that HTML class 1000 times by hand, but there are obviously other alternatives. View level abstractions in Rails or other frameworks can go a long way toward keeping the visual look explicitly declared in the HTML without having to write the same class over and over again.</p>
+			<h2>Best Practices</h2>
+			<p>After making the above mistakes over and over again, and paying the consequences later on down the road, I’ve come up with the following bits of advice. While by no means comprehensive, my experience has shown that sticking to these principles will help you better achieve the goals of good CSS architecture.</p>
+			<h3>Be intentional</h3>
+			<p>The best way to make sure your selectors don’t style unwanted elements is to not give them the opportunity. A selector like <code>#main-nav ul li ul li div</code> could very easily end up applying to unwanted elements as your markup changes down the road. A style like <code>.subnav</code>, on the other hand, will have absolutely no chance of accidentally applying to an unwanted element. Applying classes directly to the elements you want to style is the best way to keep your CSS predictable.</p>
+			<pre>/* Grenade */
+			#main-nav ul li ul { }
+			
+			/* Sniper Rifle */
+			.subnav { }</pre>
+			<p>Given the two examples above, think of the first one like a grenade and the second like a sniper rifle. The grenade might work just fine today, but you never know when an innocent civilian could move inside the blast radius.</p>
+			<h3>Separate your concerns</h3>
+			<p>I’ve already mentioned that a well organized component layer can help loosen the coupling of HTML structure in the CSS. In addition to that, your CSS components themselves should be modular. Components should know how to style themselves and do that job well, but they should not be responsible for their layout or positioning nor should they make too many assumptions about how they’ll be spaced in relation to surrounding elements.</p>
+			<p>In general, components should define how they look, but not their layout or position. Be careful when you see properties like background, color, and font in the same rule as position, width, height, and margin.</p>
+			<p>Layout and position should be handled by either a separate layout class or a separate container element. (Remember that to effectively separate content from presentation it’s often essential to separate content from its container.)</p>
+			<h3>Namespace your classes</h3>
+			<p>We already examined why parent selectors aren’t 100% effective at encapsulation and preventing style cross-contamination. A much better approach is applying namespaces to the classes themselves. If an element is a member of a visual component, every one of its sub-element classes should use the component’s base class name as a namespace.</p>
+			<pre><code>
+			/* High risk of style cross-contamination */
+			.widget { }
+			.widget .title { }
+			
+			/* Low risk of style cross-contamination */
+			.widget { }
+			.widget-title { }
+			</code></pre>
+			<p>Namespacing your classes keeps your components self-contained and modular. It minimizes the likelihood that an existing class will conflict, and it lowers the specificity required to style child elements.</p>
+			<h3>Extend components with modifier classes</h3>
+			<p>When an existing component needs to look slightly different in a certain context, create a modifier class to extend it.</p>
+			<pre>/* Bad */
+			.widget { }
+			#sidebar .widget { }
+			
+			/* Good */
+			.widget { }
+			.widget-sidebar { }</pre>
+			<p>We’ve already seen the downsides of modifying components based on one of their parent elements, but to reiterate: A modifier class can be used anywhere. Location based overrides can only be used in a specific location. Modifier classes can also be reused as many times as you need. Lastly, modifier classes express the intention of the developer very clearly right in the HTML. Location based classes, on the other hand, are completely invisible to a developer only looking at the HTML, greatly increasing the probability that it will be overlooked.</p>
+			<h3>Organize Your CSS Into a Logical Structure</h3>
+			<p><a href="http://snook.ca/">Jonathan Snook</a>, in his excellent book <a href="http://smacss.com/">SMACSS</a>, argues for organizing your CSS rules into four separate categories: base, layout, modules, and state. Base consists of reset rules and element defaults. Layout is for positioning of site-wide elements as well as generic layout helpers like grid systems. Modules are reusable visual elements, and state refers to styling that can be toggled on or off via JavaScript.</p>
+			<p>In the SMACSS system, modules (which are equivalent to what I call components) comprise the vast majority of all the CSS rules, so I often find it necessary to break them down even further into abstract templates.</p>
+			<p>Components are standalone visual elements. Templates, on the other hand, are building blocks. Templates don’t stand on their own and rarely describe look and feel. Instead, they’re single, repeatable patterns that can be put together to form a component.</p>
+			<p>To provide a concrete example, a component might be a modal dialog box. The modal might have the site’s signature background gradient in the header, it might have a drop shadow around it, it might have a close button in the top right corner, and it might be positioned fixed and centered vertically and horizontally. Each of these four patterns might be used again and again all over the site, so you wouldn’t want to have to recode those patterns each time. As such they’re all templates, and together they comprise the modal component.</p>
+			<p>I typically don’t use template classes in the HTML unless I have a good reason. Instead I use a preprocessor to include the template styles in the component definition. I’ll discuss this and my rational for doing so in more detail later.</p>
+			<h3>Use Classes For Styling And Styling Only</h3>
+			<p>Anyone who has worked on a large project has come across an HTML element with a classes whose purpose was completely unknown. You want to remove it, but you’re hesitant because it may have some purpose that you’re not aware of. As this happens again and again, over time, your HTML become filled with classes that serve no purpose just because team members are afraid to delete them.</p>
+			<p>The problem is that classes are generally given too many responsibilities in front-end web development. They style HTML elements, they act as JavaScript hooks, they’re added to the HTML for feature detections, they’re used in automated tests, etc.</p>
+			<p>This is a problem. When classes are used by too many parts of the application, it becomes very scary to remove them from your HTML.</p>
+			<p>However, with an established convention, this problem can be completely avoided. When you see a class in the HTML, you should be able to tell instantly what it’s purpose is. My recommendation is to give all non-styled classes a prefix. I use <code>.js-</code> for JavaScript and I use <code>.supports-</code> for Modernizr classes. All classes without a prefix are for styling and styling only.</p>
+			<p>This makes finding unused classes and removing them from the HTML as easy as searching the stylesheets directory. You can even automate this process in JavaScript by cross referencing the classes in the HTML with the classes in the <code>document.styleSheets</code> object. Classes that aren’t in <code>document.styleSheets</code> can be safely removed.</p>
+			<p>In general, just as it’s a best practice to separate your content from your presentation, it’s also important to separate your presentation from your functionality. Using styled classes as JavaScript hooks deeply couples your CSS and JavaScript in a way that can make it hard or impossible to update the look of certain elements without breaking functionality.</p>
+			<h3>Name your classes with a logical structure</h3>
+			<p>These days most people write CSS with hyphens as word separators. But hyphens alone are usually not enough to distinguish between different types of classes.</p>
+			<p><a href="http://nicolasgallagher.com">Nicolas Gallagher</a> recently wrote about <a href="http://nicolasgallagher.com/about-html-semantics-front-end-architecture/">his solution to this problem</a> which I have also adopted (with slight changes) with great success. To illustrate the need for a naming convention consider the following:</p>
+			<pre><code>/* A component */
+			.button-group { }
+			
+			/* A component modifier (modifying .button) */
+			.button-primary { }
+			
+			/* A component sub-object (lives within .button) */
+			.button-icon { }
+			
+			/* Is this a component class or a layout class? */
+			.header { }</code></pre>
+			<p>From looking at the above classes, it’s impossible to tell what type of rule they apply to. This not only increases confusion during development, but it also makes it harder to automated test your CSS and HTML. A structured naming convention allows you to look at a class name and know exactly what its relationship is to other classes and where it should appear in the HTML — making naming easier and testing possible where it previously was not.</p>
+			<pre><code>/* Templates Rules (using Sass placeholders) */
+			%template-name
+			%template-name--modifier-name
+			%template-name__sub-object
+			%template-name__sub-object--modifier-name
+			
+			/* Component Rules */
+			.component-name
+			.component-name--modifier-name
+			.component-name__sub-object
+			.component-name__sub-object--modifier-name
+			
+			/* Layout Rules */
+			.l-layout-method
+			.grid
+			
+			/* State Rules */
+			.is-state-type
+			
+			/* Non-styled JavaScript Hooks */
+			.js-action-name</code></pre>
+			<p>The first example redone:</p>
+			<pre><code>/* A component */
+			.button-group { }
+			
+			/* A component modifier (modifying .button) */
+			.button--primary { }
+			
+			/* A component sub-object (lives within .button) */
+			.button__icon { }
+			
+			/* A layout class */
+			.l-header { }</code></pre>
+			<h2>Tools</h2>
+			<p>Maintaining an effective and well-organized CSS architecture can be very difficult, especially on large teams. A few bad rules here and there can snowball into an unmanageable mess. Once your application’s CSS has entered into the realm of specificity wars and <code>!important</code> trumps, it can be next to impossible to recover without starting over. The key is to avoid those problems from the beginning.</p>
+			<p>Fortunately, there are tools that can make controlling your site’s CSS architecture much easier.</p>
+			<h3>Preprocessors</h3>
+			<p>These days it’s impossible to talk about CSS tools without mentioning preprocessors, so this article won’t be any different. But before I praise their usefulness, I should offer a few words of caution.</p>
+			<p>Preprocessors help you write CSS faster, not better. Ultimately it gets turned into plain CSS, and the same rules should apply. If a preprocessor lets your write your CSS faster then it also lets you write bad CSS faster, so it’s important to understand good CSS architecture before thinking a preprocessor will solve your problems.</p>
+			<p>Many of the so-called “features” of preprocessors can actually be very bad for CSS architecture. The following are some of the “features” I avoid at all costs:</p>
+			<ul><li>Never nest rules purely for code organization. Only nest when the outputted CSS is what you want.</li>
+			<li>Never use a mixin if you’re not passing an argument. Mixins without arguments are much better used as templates which can be extended.</li>
+			<li>Never use <code>@extend</code> on a selector that isn’t a single class. It doesn’t make sense from a design perspective and it bloats the compiled CSS.</li>
+			<li>Never use <code>@extend</code> for UI components in component modifier rules because you lose the inheritance chain (more on this in a bit).</li>
+			</ul><p>The best parts of preprocessors are functions like <a href="http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#extend"><code>@extend</code></a> and <a href="http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#placeholder_selectors_"><code>%placeholder</code></a>. Both allow you to easily manage CSS abstraction without adding bloat to your CSS or a huge list of base classes in your HTML that can be very hard to manage.</p>
+			<p><code>@extend</code> should be used with care though because sometime you want those classes in your HTML. For example, when you first learn about <code>@extend</code> it might be tempting to use it with all of your modifier classes like so:</p>
+			<pre><code>.button {
+			  /* button styles */
+			}
+			
+			/* Bad */
+			.button--primary {
+			  @extend .button;
+			  /* modification styles */
+			}</code></pre>
+			<p>The problem with doing this is you lose the inheritance chain in the HTML. Now it’s very difficult to select all button instances with JavaScript.</p>
+			<p>As a general rule, I never extend UI components or anything that I might want to know the type of later. This is what templates are for and another way to help distinguish between templates and components. A template is something you wouldn’t ever need to target in your application logic, and therefore can be safely extended with a preprocessor.</p>
+			<p>Here’s how it might looking using the modal example referenced above:</p>
+			<pre><code>.modal {
+			  @extend %dialog;
+			  @extend %drop-shadow;
+			  @extend %statically-centered;
+			  /* other modal styles */
+			}
+			
+			.modal__close {
+			  @extend %dialog__close;
+			  /* other close button styles */
+			}
+			
+			.modal__header {
+			  @extend %background-gradient;
+			  /* other modal header styles */
+			}</code></pre>
+			<h3>CSS Lint</h3>
+			<p><a href="http://www.stubbornella.org/">Nicole Sullivan</a> and <a href="http://www.nczonline.net/">Nicholas Zakas</a> created <a href="http://csslint.net/">CSS Lint</a> as a code quality tool to help developers detect bad practices in their CSS. Their site describes it as such:</p>
+			<blockquote><p>CSS Lint points out problems with your CSS code. It does basic syntax checking as well as applying a set of rules to the code that look for problematic patterns or signs of inefficiency. The [rules] are all pluggable, so you can easily write your own or omit ones you don’t want.</p></blockquote>
+			<p>While the general ruleset may not be perfect for most projects, the best feature of CSS Lint is its ability to be customized exactly how you want it. This means you can pick and choose the rules you want from their default list as well as write your own.</p>
+			<p>A tool like CSS Lint is essential for any large team to ensure at least a baseline of consistency and convention compliance. And like I hinted at previously, one of the great reasons for conventions is they allow for tools like CSS Lint to easily identify anything that breaks them.</p>
+			<p>Based on the conventions I’ve proposed above, it becomes very easy to write rules to detect particular antipatterns. Here are a few suggestions that I use:</p>
+			<ul><li>Don’t allow IDs in your selectors.</li>
+			<li>Don’t use non-semantic type selectors (e.g. DIV, SPAN) in any multi-part rule.</li>
+			<li>Don’t use more than 2 combinators in a selector.</li>
+			<li>Don’t allow any class names that begin with “js-”.</li>
+			<li>Warn if frequently using layout and positioning for non “l-” prefixed rules.</li>
+			<li>Warn if a class defined by itself is later redefined as a child of something else.</li>
+			</ul><p>These are obviously just suggestions, but they’re intended to get you thinking about how to enforce the standards you want on your projects.</p>
+			<h3>HTML Inspector</h3>
+			<p>Earlier I suggested that it would be easy to search your HTML classes and all linked stylesheets and warn if a class was used in the HTML but not defined in any stylesheet. I’m currently developing a tool called the HTML Inspector (I’ll be releasing the source soon) to make this process easier.</p>
+			<p>HTML Inspector traverses your HTML and (much like CSS Lint) allows you to write your own rules that throw errors and warnings when some convention is being broken. I currently use the following rules:</p>
+			<ul><li>Warn if the same ID is used more than once on a page.</li>
+			<li>Don’t use any classes that aren’t mentioned in any stylesheet or pass a whitelist (like “js-” prefixed classes).</li>
+			<li>Modifer classes shouldn’t be used without their base class.</li>
+			<li>Sub-object classes shouldn’t be used when no ancestor contains the base class.</li>
+			<li>Plain old DIV or SPAN elements, without classes attached, should not be used in the HTML.</li>
+			</ul><h2>Summary</h2>
+			<p>CSS isn’t just visual design. Don’t throw out programming best practices just because you’re writing CSS. Concepts like OOP, DRY, the open/closed principle, separation of concerns, etc. still apply to CSS.</p>
+			<p>The bottom line is that whatever you do to organize your code, make sure you judge your methods by whether or not they actually help make your development easier and more maintainable in the long term.</p>
+			<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="wpl-likebox sd-block sd-like"><h3 class="sd-title">Like this:</h3><div class="sd-content"><p class="wpl-count sd-like-count">Be the first to like this.</p></div></div></div>			</div>
+			
+				</div></div>
+			
+			<!-- / Example Content -->
+			<img class="pagebreak">
+		<script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+		<script src="jquery.baseline.js" type="text/javascript"></script>
+		<script src="rainbow-custom.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		//<![CDATA[
+		      $('#provider-content img').baseline({'0px':24, '700px':30});
+		      /*
+		       * do some jQuery magic on load
+		       */
+		      $(document).ready(function() {
+		          function showHiddenParagraphs() {
+		              $("p.hidden").fadeIn(500);
+		          }
+		          setTimeout(showHiddenParagraphs, 1000);
+		      });
+		      //]]>
+		</script>
+    </div>
+  </body>
+</html>

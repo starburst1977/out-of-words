@@ -1,0 +1,259 @@
+
+@basefont-size-singlecol-minimal: 13px;
+@basefont-size-multicol-minimal: 10px;
+@fontfamily-headlines-minimal: "Helvetica Neue", Arial, Helvetica, sans-serif;
+@fontfamily-body-minimal: "Helvetica Neue", Arial, Helvetica, sans-serif;
+@theme-minimal-lh: 1.45rem;
+@base-body-width-minimal: 320px;
+
+.minimal {
+	font-family: @fontfamily-headlines-minimal;
+	.article-header {
+		font-style: normal;
+		font-weight: 800;
+		font-family: @fontfamily-headlines-minimal;
+	}
+	#provider-content div, #provider-content p {
+		font-style: normal;
+		font-weight: 400;
+		font-family: @fontfamily-body-minimal;
+		line-height: @theme-minimal-lh;
+		-webkit-font-feature-settings: "liga", "dlig";
+		font-feature-settings: "liga", "dlig";
+	}
+	
+	#provider-content p:first-child {
+		@include dropcap();
+	}
+	h1, h2, h3, h4, h5 {
+		font-style: normal;
+		font-weight: 700;
+		font-family: @fontfamily-headlines-minimal;
+		-webkit-font-feature-settings: "liga", "dlig";
+		font-feature-settings: "liga", "dlig";
+	}
+	h1, .article-header {
+		font-size: @theme-minimal-lh*2;
+		line-height: @theme-minimal-lh*2;
+		margin: 0 0 @theme-minimal-lh;
+		text-transform: uppercase;
+		text-align: center !important;
+	}
+	h2 {
+		font-size: 1.25rem;
+		line-height: @theme-minimal-lh;
+		margin: @theme-minimal-lh*2 0 @theme-minimal-lh;
+		text-transform: uppercase;
+		text-align: center;
+	}
+	h3, h4, h5 {
+		font-size: 1rem;
+		margin: @theme-minimal-lh*1.5 0 @theme-minimal-lh/2;
+		line-height: @theme-minimal-lh;
+	}
+	blockquote, blockquote p, blockquote div {
+		font-style: italic !important;
+		font-weight: 400;
+		text-align: center;
+		font-family: Garamond, "Times New Roman", Times, serif;
+		&:last-child {
+			margin-bottom: 0 !important;
+		}
+	}
+	em {
+		font-style: italic;
+	}
+	b, strong {
+		font-weight: bold;
+	}
+	pre {
+		font-family: Menlo;
+	}
+	
+}
+
+/* Media Queries */
+
+	html /*.singlecol*/ {
+		font-size: @basefont-size-singlecol-minimal;
+		ul {
+			padding: 0 0 0 @theme-minimal-lh;
+			margin: 0 0 @theme-minimal-lh;
+		}
+		pre, code, pre code {
+			margin: 0 0 @theme-minimal-lh;
+			font-size: 0.8rem;
+			line-height: @theme-minimal-lh;
+			overflow: auto;
+			span, div, p {
+				font-size: 0.8rem;
+			}
+		}
+		.bibliography, .quotation, .quotation span, .quotation div, .quotation b, .wp-caption-text {
+			font-size: 0.8rem;
+			line-height: @theme-minimal-lh;
+		}
+	}
+	.multicol {
+		font-size: @basefont-size-multicol-minimal;
+		.multicol-helper {
+			-webkit-column-width: 20rem;
+			-webkit-column-gap: 5rem;
+			-webkit-column-rule: 1px dotted rgba(0,0,0,0.05);
+			position: absolute;
+			top: 2rem;
+			left: 3rem;
+			right: 3rem;
+			bottom: 4rem;
+			.article-header {
+				-webkit-column-span: all;
+				text-align: left;
+			}
+		}
+		ul {
+			padding: 0 0 0 @theme-minimal-lh;
+			margin: 0 0 @theme-minimal-lh;
+		}
+		pre, code, pre code {
+			margin: 0 0 @theme-minimal-lh;
+			span, div, p {
+			}
+		}
+		.bibliography, .quotation, .quotation span, .quotation div, .quotation b, .wp-caption-text {
+			font-size: 0.8rem;
+			line-height: @theme-minimal-lh;
+		}
+	}
+@media only screen and (max-width: 499px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 1;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 7;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 1;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 7;
+			}
+		}
+	}
+}
+@media only screen and (min-width: 500px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 2;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 8;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 2;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 8;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 40px;
+		}
+	}
+}
+@media only screen and (min-width: 600px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 3;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 9;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 3;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 9;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 80px;
+		}
+	}
+}
+@media only screen and (min-width: 700px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 4;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 10;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 4;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 10;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 120px;
+		}
+	}
+}
+@media only screen and (min-width: 800px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 5;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 11;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 5;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 11;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 160px;
+		}
+	}
+}
+@media only screen and (min-width: 1000px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 6;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 12;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 6;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 12;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 200px;
+		}
+	}
+}
+@media only screen and (min-width: 1200px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 7;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 13;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 7;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 13;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 240px;
+		}
+	}
+}
+@media only screen and (min-width: 1500px) {
+	html {
+		font-size: @basefont-size-singlecol-minimal + 8;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-minimal + 14;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-minimal + 8;
+			&.BigFont {
+				font-size: @basefont-size-multicol-minimal + 14;
+			}
+		}
+		body {
+			width: @base-body-width-minimal + 280px;
+		}
+	}
+}

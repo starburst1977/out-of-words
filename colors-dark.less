@@ -1,0 +1,33 @@
+body.dark {
+	background-color: #555;
+	div, p {
+		color: #eee;
+	}
+	h1 {
+		color: #fff;
+	}
+	h2, h3, h4, h5 {
+		color: #eee;
+		&.red {
+			color: #ff0000;
+		}
+	}
+	b, strong {
+		color: #ddd;
+	}
+	a {
+		color: #ffcc00;
+	}
+	code, pre {
+		color: #bbb;
+		text-shadow: 0 1px 0 #000;
+	}
+	:not(pre) > code,
+	pre {
+		background: #595959;
+	}
+
+	td {
+		color: #ccc;
+	}
+}

@@ -1,0 +1,254 @@
+
+@basefont-size-singlecol-liberation: 13px;
+@basefont-size-multicol-liberation: 11px;
+@fontfamily-headlines-liberation: Liberation Sans;
+@fontfamily-body-liberation: Linux Libertine O;
+@theme-liberation-lh: 1.4rem;
+@base-body-width-liberation: 320px;
+
+.liberation {
+	font-family: @fontfamily-headlines-liberation;
+	.article-header {
+		font-style: normal;
+		font-weight: 700;
+		font-family: @fontfamily-headlines-liberation;
+	}
+	#provider-content div, #provider-content p {
+		font-style: normal;
+		font-weight: 400;
+		font-family: @fontfamily-body-liberation;
+		line-height: @theme-liberation-lh;
+		-webkit-font-feature-settings: "liga", "dlig";
+		font-feature-settings: "liga", "dlig";
+	}
+	
+	#provider-content p:first-child {
+		@include dropcap();
+	}
+	h1, h2, h3, h4, h5 {
+		font-style: normal;
+		font-weight: 700;
+		font-family: @fontfamily-headlines-liberation;
+		-webkit-font-feature-settings: "liga", "dlig";
+		font-feature-settings: "liga", "dlig";
+	}
+	h1, .article-header {
+		font-size: @theme-liberation-lh*2;
+		line-height: @theme-liberation-lh*2;
+		margin: 0 0 @theme-liberation-lh;
+		text-transform: uppercase;
+		text-align: center !important;
+	}
+	h2 {
+		font-size: 1.25rem;
+		line-height: @theme-liberation-lh;
+		margin: @theme-liberation-lh*2 0 @theme-liberation-lh;
+	}
+	h3, h4, h5 {
+		font-size: 1rem;
+		margin: @theme-traditional-lh*1.5 0 @theme-traditional-lh/2;
+		line-height: @theme-liberation-lh;
+	}
+	blockquote, blockquote p, blockquote div {
+		font-style: italic !important;
+		font-weight: 400;
+		text-align: center;
+		font-family: Garamond, "Times New Roman", Times, serif;
+		&:last-child {
+			margin-bottom: 0 !important;
+		}
+	}
+	em {
+		font-style: italic;
+	}
+	b, strong {
+		font-weight: bold;
+	}
+	
+}
+
+/* Media Queries */
+
+	html /*.singlecol*/ {
+		font-size: @basefont-size-singlecol-liberation;
+		ul {
+			padding: 0 0 0 @theme-liberation-lh;
+			margin: 0 0 @theme-liberation-lh;
+		}
+		pre, code, pre code {
+			margin: 0 0 @theme-liberation-lh;
+			font-size: 0.8rem;
+			line-height: @theme-liberation-lh;
+			overflow: auto;
+			span, div, p {
+				font-size: 0.8rem;
+			}
+		}
+		.bibliography, .quotation, .quotation span, .quotation div, .quotation b, .wp-caption-text {
+			font-size: 0.8rem;
+			line-height: @theme-liberation-lh;
+		}
+	}
+	.multicol {
+		font-size: @basefont-size-multicol-liberation;
+		.multicol-helper {
+			-webkit-column-width: 20rem;
+			-webkit-column-gap: 5rem;
+			-webkit-column-rule: 1px dotted rgba(0,0,0,0.05);
+			position: absolute;
+			top: 2rem;
+			left: 3rem;
+			right: 3rem;
+			bottom: 4rem;
+			.article-header {
+				-webkit-column-span: all;
+				text-align: left;
+			}
+		}
+		ul {
+			padding: 0 0 0 @theme-liberation-lh;
+			margin: 0 0 @theme-liberation-lh;
+		}
+		pre, code, pre code {
+			margin: 0 0 @theme-liberation-lh;
+			span, div, p {
+			}
+		}
+		.bibliography, .quotation, .quotation span, .quotation div, .quotation b, .wp-caption-text {
+			font-size: 0.8rem;
+			line-height: @theme-liberation-lh;
+		}
+	}
+@media only screen and (max-width: 499px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 1;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 7;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 1;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 7;
+			}
+		}
+	}
+}
+@media only screen and (min-width: 500px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 2;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 8;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 2;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 8;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 40px;
+		}
+	}
+}
+@media only screen and (min-width: 600px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 3;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 9;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 3;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 9;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 80px;
+		}
+	}
+}
+@media only screen and (min-width: 700px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 4;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 10;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 4;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 10;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 120px;
+		}
+	}
+}
+@media only screen and (min-width: 800px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 5;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 11;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 5;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 11;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 160px;
+		}
+	}
+}
+@media only screen and (min-width: 1000px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 6;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 12;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 6;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 12;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 200px;
+		}
+	}
+}
+@media only screen and (min-width: 1200px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 7;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 13;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 7;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 13;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 240px;
+		}
+	}
+}
+@media only screen and (min-width: 1500px) {
+	html {
+		font-size: @basefont-size-singlecol-liberation + 8;
+		&.BigFont {
+			font-size: @basefont-size-singlecol-liberation + 14;
+		}
+		&.multicol {
+			font-size: @basefont-size-multicol-liberation + 8;
+			&.BigFont {
+				font-size: @basefont-size-multicol-liberation + 14;
+			}
+		}
+		body {
+			width: @base-body-width-liberation + 280px;
+		}
+	}
+}
