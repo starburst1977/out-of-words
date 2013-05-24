@@ -1,5 +1,5 @@
 # Out of Words
-We needed a way to display HTML-based articles (pulled from various Read-it-Later services), so I created this framework to normalise & layout/display them. Due to having no control over what markup may come my way, this is a sometimes tedious task. Due to [Words](http://www.newnet-soft.com/words) having two different ways to display your articles, every theme has a single column (vertical scrolling) & a multi column (horizontal scrolling) view.
+We needed a way to display HTML-based articles (pulled from various Read-it-Later services) in a responsive way, so I created this framework to normalise & layout/display them. Due to having no control over what markup may come my way, this is a sometimes tedious task. Due to [Words](http://www.newnet-soft.com/words) having two different ways to display your articles, every theme has a single column (vertical scrolling) & a multi column (horizontal scrolling) view.
 
 Check it out here: http://starburst1977.github.io/out-of-words/
 
