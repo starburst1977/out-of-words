@@ -3,7 +3,7 @@
 		<meta charset="utf-8" />
 		<title></title>
 		<link href="style.css" rel="stylesheet" type="text/css" />
-		<link href="rainbow-theme.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="prettify/styles/tomorrow.css">
 	</head>
 	<body class="liberation">
 
@@ -291,7 +291,11 @@ body.homepage .widget {
 			<!-- / Example Content -->
 			<img class="pagebreak">
 		<script src="jquery-1.9.1.min.js" type="text/javascript"></script>
-		<script src="rainbow-custom.min.js" type="text/javascript"></script>
+		<script src="prettify/highlight.pack.js"></script>
+		<script type="text/javascript">
+		  hljs.tabReplace = '    '; // 4 spaces
+		  hljs.initHighlightingOnLoad();
+		</script>
     </div>
   </body>
 </html>
