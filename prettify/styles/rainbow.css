@@ -8,8 +8,9 @@ pre ::-moz-selection{ background: #FF5E99; color:#fff; text-shadow: none; }
 pre ::selection { background:#FF5E99; color:#fff; text-shadow: none; }
 
 pre code {
-  display: block; padding: 0.5em;
+  display: block; padding: 0.75em 1em;
   background: #474949; color: #D1D9E1;
+  border-radius: 0.5rem;
 }
 
 
