@@ -1,9 +1,8 @@
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="multicol language-css">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="multicol language-markup">
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
 		<link href="style.css" rel="stylesheet" type="text/css" />
-		<link href="rainbow-theme.css" rel="stylesheet" type="text/css" />
 		<link href="prism.css" rel="stylesheet" />
 	</head>
 	<body class="traditional">
@@ -43,7 +42,7 @@
 			<p>The following examples are all generalizations of code I’ve actually written, and, while technically valid, each has lead to disaster and headache. Dispite my best intentions and the promise that this time would be different, these patterns consistently got me into trouble.</p>
 			<h3>Modifying Components Based On Who Their Parents Are</h3>
 			<p>In almost every site on the web there will be a particular visual element that looks exactly the same with each occurrence, except one. And when faced with this one-off situation almost every new CSS developer (and even experienced ones) handles it the same way. You figure out some unique parent for this one particular occurrence (or you create one), and you write a new rule to handle it.</p>
-			<pre><code>.widget {
+			<pre class=" language-css"><code class=" language-css">.widget {
 			  background: yellow;
 			  border: 1px solid black;
 			  color: black;
@@ -294,7 +293,8 @@
 			<!-- / Example Content -->
 			<img class="pagebreak">
 		<script src="jquery-1.9.1.min.js" type="text/javascript"></script>
-		<script src="prism.js"></script>
+		
     </div>
+    <script src="prism.js" data-default-language="markup"></script>
   </body>
 </html>
